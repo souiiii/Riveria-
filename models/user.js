@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { createHmac, randomBytes } from "node:crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -32,6 +33,20 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre("save", function (next) {
+  const user = this;
+  if (!user.isModified("password")) return;
+  const salt = randomBytes(16).toString();
+  const hashedPassword = createHmac("sha256", salt)
+    .update(user.password)
+    .digest("hex");
+
+  this.salt = salt;
+  this.password = hashedPassword;
+
+  next();
+});
 
 const user = mongoose.model("user", userSchema);
 
