@@ -10,14 +10,14 @@ import connectMongoose from "./connection.js";
 import { checkAuth, checkAuthorization } from "./middlewares/user.js";
 import cookieParser from "cookie-parser";
 
-connectMongoose("mongodb://127.0.0.1:27017/riveria")
+connectMongoose(process.env.mongoUrl)
   .then(() => console.log("database connected"))
   .catch(() =>
     console.log("error encountered while connecting to the database")
   );
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 
 app.use(express.static(path.resolve("public")));
 app.set("view engine", "ejs");
