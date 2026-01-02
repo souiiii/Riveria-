@@ -4,7 +4,7 @@ import blog from "../models/blog.js";
 const router = express.Router();
 
 async function getBlogs() {
-  const blogs = (await blog.find({}).populate("author")).sort("createdAt", -1);
+  const blogs = await blog.find({}).populate("author").sort({ createdAt: -1 });
   return blogs;
 }
 

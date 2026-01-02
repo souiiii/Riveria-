@@ -27,4 +27,16 @@ router.post("/add-new", upload.single("coverImage"), async (req, res) => {
   return res.redirect("/riveria");
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const blogg = await blog.findById(req.params.id).populate("author");
+    if (!blogg) return res.redirect("/riveria");
+    console.log(blogg.coverImageUrl);
+    return res.render("blog", { blog: blogg.toObject() });
+  } catch (err) {
+    console.log(err);
+    return res.redirect("/riveria");
+  }
+});
+
 export default router;
